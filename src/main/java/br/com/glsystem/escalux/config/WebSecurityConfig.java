@@ -2,6 +2,7 @@ package br.com.glsystem.escalux.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,19 +17,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	http
+        .csrf().disable()
         .authorizeRequests()
-        .anyRequest().permitAll();
-       /* http
-            .authorizeRequests()
-                .antMatchers("/", "/home").permitAll()
-                .anyRequest().authenticated()
-                .and()
-            .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .and()
-            .logout()
-                .permitAll();*/
+//          .antMatchers(HttpMethod.values(),"/").permitAll()//allow CORS option calls
+          .antMatchers("/**").permitAll()
+          .anyRequest().authenticated()
+        .and()
+        .formLogin()
+        .and()
+        .httpBasic();
     }
 
     @Bean

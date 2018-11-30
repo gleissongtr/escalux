@@ -3,9 +3,13 @@ package br.com.glsystem.escalux.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
@@ -23,12 +27,12 @@ public class PessoaController extends BaseController {
 	@Autowired
 	private PessoaService pessoaService;
 
-//	@ApiOperation(value="Incluir Agrupador", tags={"Agrupadores"})
-//	@PostMapping
-//	public ResponseEntity<AgrupadorDTO> incluir(@Valid @RequestBody AgrupadorDTO agrupadorDTO) throws Exception {
-//		agrupadorDTO = grupoFuncionalidadeService.incluir(agrupadorDTO);
-//		return ResponseEntity.created(tratarResourceURI(agrupadorDTO.getId())).body(agrupadorDTO);
-//	}
+	@ApiOperation(value="Incluir Pessoa", tags={"Agrupadores"})
+	@PostMapping
+	public ResponseEntity<PessoaDTO> incluir(@Valid @RequestBody PessoaDTO pessoaDTO) throws Exception {
+		pessoaDTO = pessoaService.incluir(pessoaDTO);
+		return ResponseEntity.ok(pessoaDTO);
+	}
 //	
 //	@ApiOperation(value="Alterar Agrupador", tags={"Agrupadores"})
 //	@PutMapping(value = "/{id}")
@@ -51,7 +55,7 @@ public class PessoaController extends BaseController {
 //	}
 
 	@ApiOperation(value="Listar Pessoas", tags={"Pessoa"})
-	@GetMapping(value = "/pessoas")
+	@GetMapping
 	public ResponseEntity<List<PessoaDTO>> listar(WebRequest webRequest) throws Exception {
 		return ResponseEntity.ok(pessoaService.listar(getRequestMap(webRequest)));
 	}

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.glsystem.escalux.controller.dto.PessoaDTO;
 import br.com.glsystem.escalux.domain.Pessoa;
@@ -17,12 +18,12 @@ public class PessoaService {
 	@Autowired
 	PessoaRepository pessoaRepository;
 	
-//	@Transactional
-//	public FuncionalidadeDTO incluir(FuncionalidadeDTO funcionalidadeDTO) throws Exception {
-//		validar(funcionalidadeDTO);
-//		Funcionalidade funcionalidade = new Funcionalidade(funcionalidadeDTO);
-//		return toDTO(funcionalidadeRepository.save(funcionalidade));
-//	}
+	@Transactional
+	public PessoaDTO incluir(PessoaDTO pessoaDTO) throws Exception {
+		Pessoa pessoa = new Pessoa(pessoaDTO);
+		pessoaRepository.save(pessoa);
+		return new PessoaDTO(pessoa);
+	}
 //
 //	@Transactional
 //	public FuncionalidadeDTO alterar(FuncionalidadeDTO funcionalidadeDTO) throws Exception {
@@ -51,7 +52,6 @@ public class PessoaService {
 	
 	public List<PessoaDTO> listar(Map<String, String> filtro) throws Exception {
 		List<Pessoa> lstPessoa = pessoaRepository.findAll();
-		lstPessoa.add(new Pessoa());
 		return lstPessoa.stream().map(pessoa -> new PessoaDTO(pessoa)).collect(Collectors.toList());
 	}
 	

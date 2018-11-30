@@ -1,15 +1,27 @@
 package br.com.glsystem.escalux.config;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
 
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.Parameter;
+import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -19,14 +31,37 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Swagger2Config extends WebMvcConfigurationSupport {
     @Bean
     public Docket productrApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(Predicates.not(PathSelectors.regex("/error.*"))) // (2) -> Ignora os endpoints "error" automáticos
-                .build();
-             
-    }
+		return new Docket(DocumentationType.SWAGGER_2)
+				.select()
+				.apis(RequestHandlerSelectors.any())
+				//.paths(PathSelectors.any())
+				.paths(Predicates.not(PathSelectors.regex("/error.*"))) // (2) -> Ignora os endpoints "error" automáticos
+				.build()
+				.securitySchemes(Lists.newArrayList(apiKey()))
+				.tags(
+						new Tag("Gastos",  "Interfaces para Gastos")
+					)
+				.globalOperationParameters(getHeaderParams())
+				.apiInfo(apiInfo());
+
+	}
     
+	public List<Parameter> getHeaderParams() {
+		List<Parameter> parameters = new ArrayList<Parameter>();
+//		parameters.add(new ParameterBuilder().name("usuario").modelRef(
+//				new ModelRef("string"))
+//				.parameterType("header")
+//				.description("Usuário Autenticar")
+//				.required(false)
+//				.build());
+//		parameters.add(new ParameterBuilder().name("senha").modelRef(
+//				new ModelRef("string"))
+//				.parameterType("header")
+//				.description("Senha do usuário")
+//				.required(false)
+//				.build());
+		return parameters;
+	}
     
   @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -36,4 +71,13 @@ public class Swagger2Config extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
+  
+	@Bean
+	SecurityScheme apiKey() {
+		return new ApiKey("Authorization", "Authorization", "header");
+	}
+
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder().title("Integra IDEA API").build();
+	}
 }
