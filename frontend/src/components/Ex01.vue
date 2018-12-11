@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     buscar () {
-      axios.get(`http://localhost:8090/gasto/`)
+      axios.get(`http://localhost:8090/escalux/gasto/`)
         .then(response => {
           // JSON responses are automatically parsed.
           this.gasto = response.data
