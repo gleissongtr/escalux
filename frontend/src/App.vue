@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <b-container>
+      <menu-bar></menu-bar>
       <b-jumbotron header="Bootstrap Vue"
                     lead="Bootstrap 4 Components for Vue.js 2"
       >
@@ -14,10 +15,15 @@
 </template>
 
 <script>
+import MenuBar from '@/components/MenuBar'
 /* eslint-disable */
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    MenuBar
+  }
 }
+
 </script>
 
 <style>
